@@ -1,0 +1,10 @@
+: 1
+summary: libjson-marshaling project repository
+
+:
+role: prerequisite
+location: https://github.com/sequence-point/libunittest.git##HEAD
+
+:
+role: prerequisite
+location: https://github.com/sequence-point/libjson.git##HEAD

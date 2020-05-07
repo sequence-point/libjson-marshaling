@@ -1,0 +1,9 @@
+This package contains libjson-marshaling.
+
+libjson-marshaling provides marshaling features between C++ and JSON and
+works in conjuction with libjson.
+
+See the LICENSE file for the distribution conditions.
+
+Questions, bugs, and any other feedback can be sent to
+support@sequence-point.se.

@@ -1,0 +1,56 @@
+int_libs = # Interface dependencies.
+imp_libs = # Implementation dependencies.
+
+import int_libs += libjson%lib{json}
+
+import test_libs = libunittest%lib{unittest}
+
+./: lib{json-marshaling}: {hxx ixx txx}{** -_** -**.test... -version} hxx{version} \
+  $imp_libs $int_libs
+
+# Unit tests.
+#
+exe{*.test}:
+{
+  test = true
+  install = false
+}
+
+for t: cxx{**.test...}
+{
+  d = $directory($t)
+  n = $name($t)...
+
+  ./: $d/exe{$n}: $t $d/{hxx ixx txx}{+$n} $d/testscript{+$n} lib{json-marshaling} $test_libs
+}
+
+# Include the generated version header into the distribution (so that we don't
+# pick up an installed one) and don't remove it when cleaning in src (so that
+# clean results in a state identical to distributed).
+#
+hxx{version}: in{version} $src_root/manifest
+{
+  dist  = true
+  clean = ($src_root != $out_root)
+}
+
+# Build options.
+#
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+
+# Export options.
+#
+lib{json-marshaling}:
+{
+  cxx.export.poptions = "-I$out_root" "-I$src_root"
+  cxx.export.libs = $int_libs
+}
+
+# Install into the libjson-marshaling/ subdirectory of, say, /usr/include/
+# recreating subdirectories.
+#
+{hxx ixx txx}{*}:
+{
+  install         = include/libjson-marshaling/
+  install.subdirs = true
+}

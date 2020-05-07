@@ -1,0 +1,6 @@
+$out_root/
+{
+  include libjson/marshaling/
+}
+
+export $out_root/libjson/marshaling/$import.target

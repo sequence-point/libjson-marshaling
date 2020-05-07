@@ -1,0 +1,39 @@
+#ifndef libjson__marshaling__version_hxx_
+#define libjson__marshaling__version_hxx_
+
+// The numeric version format is AAAAABBBBBCCCCCDDDE where:
+//
+// AAAAA - major version number
+// BBBBB - minor version number
+// CCCCC - bugfix version number
+// DDD   - alpha / beta (DDD + 500) version number
+// E     - final (0) / snapshot (1)
+//
+// When DDDE is not 0, 1 is subtracted from AAAAABBBBBCCCCC. For example:
+//
+// Version      AAAAABBBBBCCCCCDDDE
+//
+// 0.1.0        0000000001000000000
+// 0.1.2        0000000001000020000
+// 1.2.3        0000100002000030000
+// 2.2.0-a.1    0000200001999990010
+// 3.0.0-b.2    0000299999999995020
+// 2.2.0-a.1.z  0000200001999990011
+//
+#define LIBJSON_MARSHALING_VERSION                                             \
+  $libjson_marshaling.version.project_number$ULL
+#define LIBJSON_MARSHALING_VERSION_STR "$libjson_marshaling.version.project$"
+#define LIBJSON_MARSHALING_VERSION_ID "$libjson_marshaling.version.project_id$"
+
+#define LIBJSON_MARSHALING_VERSION_MAJOR $libjson_marshaling.version.major$
+#define LIBJSON_MARSHALING_VERSION_MINOR $libjson_marshaling.version.minor$
+#define LIBJSON_MARSHALING_VERSION_PATCH $libjson_marshaling.version.patch$
+
+#define LIBJSON_MARSHALING_PRE_RELEASE $libjson_marshaling.version.pre_release$
+
+#define LIBJSON_MARSHALING_SNAPSHOT_SN                                         \
+  $libjson_marshaling.version.snapshot_sn$ULL
+#define LIBJSON_MARSHALING_SNAPSHOT_ID                                         \
+  "$libjson_marshaling.version.snapshot_id$"
+
+#endif
