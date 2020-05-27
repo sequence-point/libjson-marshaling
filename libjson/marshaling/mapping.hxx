@@ -88,7 +88,7 @@ public:
     for (auto const& j : init)
       mappings_.emplace(j.key(), j);
 
-    for (auto const& j : inherit.mappings())
+    for (auto const& j : inherit)
       mappings_.emplace(j);
   }
 
