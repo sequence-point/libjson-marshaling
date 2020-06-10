@@ -35,9 +35,23 @@ serialize(T const& model)
 
 template< typename T >
 T
+deserialize(diagnostics& d, std::istream& i)
+{
+  return unmarshal< T >(read(d, i));
+}
+
+template< typename T >
+T
 deserialize(std::istream& i)
 {
   return unmarshal< T >(read(i));
+}
+
+template< typename T >
+T
+deserialize(diagnostics& d, std::istream&& i)
+{
+  return deserialize< T >(d, i);
 }
 
 template< typename T >
@@ -49,8 +63,18 @@ deserialize(std::istream&& i)
 
 template< typename T >
 T
+deserialize(diagnostics& d, std::string const& str)
+{
+  // TODO use std::string overload of read
+  return deserialize< T >(
+    d, std::istringstream{ str, std::ios::in | std::ios::binary });
+}
+
+template< typename T >
+T
 deserialize(std::string const& str)
 {
+  // TODO use std::string overload of read
   return deserialize< T >(
     std::istringstream{ str, std::ios::in | std::ios::binary });
 }
