@@ -21,7 +21,7 @@ struct marshaling_traits {
   {
     object obj;
 
-    for (auto const& j : T::json)
+    for (auto const& j : T::json())
       obj.emplace(j.first, j.second.get(model));
 
     return obj;
@@ -37,7 +37,7 @@ struct marshaling_traits {
 
     T model;
 
-    for (auto const& j : T::json) {
+    for (auto const& j : T::json()) {
       if (obj.count(j.first) != 1) {
         if (!j.second.optional())
           throw std::runtime_error{ "missing field '" + j.first + "'" };
