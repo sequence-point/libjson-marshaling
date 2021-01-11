@@ -4,11 +4,18 @@
 #include <libjson/optional.hxx>
 #include <libjson/variant.hxx>
 
+#include <chrono>
+#include <ctime>
 #include <deque>
+#include <iomanip>
 #include <list>
+#include <locale>
 #include <map>
 #include <string>
 #include <vector>
+
+#define __STDC_WANT_LIB_EXT1__ 1
+#include <time.h>
 
 namespace json::marshaling {
 
@@ -31,7 +38,9 @@ struct marshaling_traits {
   unmarshal(variant const& value)
   {
     if (!value.is_object())
-      throw std::runtime_error{ "cannot unmarshal non-object value" };
+      throw std::runtime_error{
+        "cannot unmarshal non-object value"
+      }; // TODO change exception type
 
     auto const& obj = get< object >(value);
 
@@ -40,7 +49,8 @@ struct marshaling_traits {
     for (auto const& j : T::json()) {
       if (obj.count(j.first) != 1) {
         if (!j.second.optional())
-          throw std::runtime_error{ "missing field '" + j.first + "'" };
+          throw std::runtime_error{ "missing field '" + j.first +
+                                    "'" }; // TODO change exception type
 
         continue; // Try next key.
       }
@@ -424,6 +434,41 @@ struct marshaling_traits< std::deque< T > > {
       model.emplace_back(marshaling_traits< T >::unmarshal(j));
 
     return model;
+  }
+};
+
+template<>
+struct marshaling_traits< std::chrono::system_clock::time_point > {
+  using model_type = std::string;
+
+  static variant
+  marshal(std::chrono::system_clock::time_point const& model)
+  {
+    static constexpr const char time_format[] = "%a, %d %b %Y %H:%M:%S GMT";
+
+    std::time_t now_c = std::chrono::system_clock::to_time_t(model);
+
+    struct std::tm tm_buf;
+
+    std::stringstream str;
+    str.imbue(std::locale{});
+
+#ifdef _MSC_VER
+    ::gmtime_s(&tm_buf, &now_c); // Stupid Microsoft.
+    str << std::put_time(&tm_buf, time_format);
+#else
+    ::gmtime_s(&now_c, &tm_buf);
+    str << std::put_time(&tm_buf, time_format);
+#endif
+
+    return str.str();
+  }
+
+  static std::chrono::system_clock::time_point
+  unmarshal(variant const& value)
+  {
+    // TODO implement
+    throw std::runtime_error{ "not implemented" };
   }
 };
 
